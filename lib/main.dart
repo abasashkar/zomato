@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zomato/core/theme/app_theme.dart';
-import 'package:zomato/features/home/presentation/pages/home_page.dart';
+import 'package:zomato/features/splash/presentation/pages/splash_page.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: HomePage(),
+      home: SplashPage(),
     );
   }
 }
