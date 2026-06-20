@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zomato/core/theme/app_colours.dart';
-import 'package:zomato/features/home/presentation/pages/home_page.dart';
+import 'package:zomato/features/auth/presentation/pages/login_screen.dart';
+
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -59,7 +60,7 @@ class _SplashPageState extends State<SplashPage>
 
     if (!mounted) return;
 
-Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
   }
 
   @override

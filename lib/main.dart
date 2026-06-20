@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:zomato/core/di/dependency_injection.dart';
 import 'package:zomato/core/theme/app_theme.dart';
 import 'package:zomato/features/splash/presentation/pages/splash_page.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(MyApp());
 }
 

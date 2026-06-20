@@ -82,4 +82,47 @@ class AppTextStyles {
         fontSize: 11,
         fontWeight: FontWeight.w500,
       );
+
+
+  static TextStyle get authTitle => const TextStyle(
+      fontFamily: _font,
+      fontSize: 34,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textPrimary,
+    );
+
+static TextStyle get authSubtitle => const TextStyle(
+      fontFamily: _font,
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      color: AppColors.textSecondary,
+    );
+
+static TextStyle get authLabel => const TextStyle(
+      fontFamily: _font,
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: AppColors.textPrimary,
+    );
+
+static TextStyle get authButton => const TextStyle(
+      fontFamily: _font,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textOnPrimary,
+    );
+
+static TextStyle get socialButton => const TextStyle(
+      fontFamily: _font,
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: AppColors.textPrimary,
+    );
+
+static TextStyle get signUp => const TextStyle(
+      fontFamily: _font,
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+      color: AppColors.primary,
+    );
 }
