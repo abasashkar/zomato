@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:zomato/core/theme/app_colours.dart';
 import 'package:zomato/core/theme/app_sizes.dart';
 import 'package:zomato/core/theme/app_text_style.dart';
-import 'package:zomato/core/widgets/category_tile.dart';
-import 'package:zomato/core/widgets/home_bottom_nav.dart';
-import 'package:zomato/core/widgets/home_header.dart';
-import 'package:zomato/core/widgets/promo_banner.dart';
-import 'package:zomato/core/widgets/restaurant_card.dart';
+import 'package:zomato/core/Components/category_tile.dart';
+import 'package:zomato/core/Components/home_bottom_nav.dart';
+import 'package:zomato/core/Components/home_header.dart';
+import 'package:zomato/core/Components/promo_banner.dart';
+import 'package:zomato/core/Components/restaurant_card.dart';
 
 
 class HomePage extends StatefulWidget {
