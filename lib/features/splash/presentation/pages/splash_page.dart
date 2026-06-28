@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zomato/core/theme/app_colours.dart';
+import 'package:zomato/features/auth/bloc/auth_bloc.dart';
+import 'package:zomato/features/auth/bloc/auth_state.dart';
 import 'package:zomato/features/auth/presentation/pages/login_screen.dart';
+import 'package:zomato/features/home/presentation/pages/home_page.dart';
 
 
 class SplashPage extends StatefulWidget {
@@ -56,11 +60,25 @@ class _SplashPageState extends State<SplashPage>
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(const Duration(seconds: 3));
+    final authState = context.read<AuthBloc>().stream.firstWhere(
+      (state) => state is Authenticated || state is UnAuthenticated,
+    );
+
+    await Future.wait([
+      Future.delayed(const Duration(seconds: 3)),
+      authState,
+    ]);
 
     if (!mounted) return;
 
-Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+    final isLoggedIn = context.read<AuthBloc>().state is Authenticated;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => isLoggedIn ? const HomePage() : const LoginScreen(),
+      ),
+    );
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:zomato/core/theme/app_text_style.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color? backgroundColor;
   final Color? textColor;
   final double? height;
@@ -17,7 +17,7 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
     required this.text,
-    required this.onTap,
+    this.onTap,
     this.backgroundColor,
     this.textColor,
     this.height,

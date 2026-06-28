@@ -34,12 +34,11 @@ class AuthInterceptor extends Interceptor{
           return handler.next(err);
         }
 
-        final response = await Dio().post(
-          '${ApiConstants.baseUrl}${ApiConstants.register}',
-          data: {
-            'refreshToken': refreshToken,
-          },
-        );
+   final response = await Dio().post(
+  '${ApiConstants.baseUrl}${ApiConstants.refresh}',  
+  data: {'refreshToken': refreshToken},
+  options: Options(headers: {'Content-Type': 'application/json'}),
+);
 
         final newAccessToken =
             response.data['accessToken'];

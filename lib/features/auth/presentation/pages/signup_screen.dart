@@ -3,12 +3,72 @@ import 'package:zomato/core/components/primary_button.dart';
 import 'package:zomato/core/theme/app_colours.dart';
 import 'package:zomato/core/theme/app_sizes.dart';
 import 'package:zomato/core/theme/app_text_style.dart';
+import 'package:zomato/features/auth/bloc/auth_bloc.dart';
+import 'package:zomato/features/auth/bloc/auth_event.dart';
+import 'package:zomato/features/auth/bloc/auth_state.dart';
 import 'package:zomato/features/auth/presentation/pages/login_screen.dart';
-import 'package:zomato/features/auth/presentation/widgets/custom_textfield.dart';
-import 'package:zomato/features/auth/presentation/widgets/social_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignupScreen extends StatelessWidget {
+
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _register() {
+    if (!_formKey.currentState!.validate()) return;
+
+    context.read<AuthBloc>().add(
+          RegisterRequested(
+            name: nameController.text.trim(),
+            email: emailController.text.trim(),
+            password: passwordController.text,
+            role: 'CUSTOMER',
+          ),
+        );
+  }
+
+  String? _validateName(String? value) {
+    if (value == null || value.trim().length < 2) {
+      return 'Name must be at least 2 characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email is required';
+    }
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (!emailRegex.hasMatch(value.trim())) {
+      return 'Enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,109 +104,169 @@ class SignupScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    const Text(
-                      '🍅',
-                      style: TextStyle(fontSize: 70),
-                    ),
+                child: BlocConsumer<AuthBloc, AuthState>(
+  listener: (context, state) {
+    if (state is AuthSuccuess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.message)),
+      );
 
-                    const SizedBox(height: 12),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+      );
+    }
 
-                    Text(
-                      'Create Account',
-                      style: AppTextStyles.authTitle,
-                    ),
+    if (state is AuthFailure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.message)),
+      );
+    }
+  },
 
-                    const SizedBox(height: 8),
+  builder: (context, state) {
+    return Form(
+      key: _formKey,
+      child: Column(
+      children: [
+        const Text(
+          '🍅',
+          style: TextStyle(fontSize: 70),
+        ),
 
-                    Text(
-                      'Join and discover great food',
-                      style: AppTextStyles.authSubtitle,
-                    ),
+        const SizedBox(height: 12),
 
-                    const SizedBox(height: 32),
+        Text(
+          'Create Account',
+          style: AppTextStyles.authTitle,
+        ),
 
-                    const CustomTextField(
-                      hintText: 'Full Name',
-                      prefixIcon: Icons.person_outline,
-                    ),
+        const SizedBox(height: 8),
 
-                    const SizedBox(height: 16),
+        Text(
+          'Join and discover great food',
+          style: AppTextStyles.authSubtitle,
+        ),
 
-                    const CustomTextField(
-                      hintText: 'Email Address',
-                      prefixIcon: Icons.email_outlined,
-                    ),
+        const SizedBox(height: 32),
 
-                    const SizedBox(height: 16),
-
-                    const CustomTextField(
-                      hintText: 'Mobile Number',
-                      prefixIcon: Icons.phone_outlined,
-                      keyboardType: TextInputType.phone,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    PrimaryButton(
-                      text: 'Create Account',
-                      onTap: () {},
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        const Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 12),
-                          child: Text('OR'),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Already have an account?',
-                          style:
-                              AppTextStyles.authSubtitle,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
-                          },
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+        TextFormField(
+          controller: nameController,
+          validator: _validateName,
+          decoration: InputDecoration(
+            hintText: 'Full Name',
+            prefixIcon: const Icon(Icons.person_outline),
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
             ),
           ),
         ),
-      ),
+
+        const SizedBox(height: 16),
+
+        TextFormField(
+          controller: emailController,
+          validator: _validateEmail,
+          keyboardType: TextInputType.emailAddress,
+          decoration: InputDecoration(
+            hintText: 'Email Address',
+            prefixIcon: const Icon(Icons.email_outlined),
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        TextFormField(
+          controller: passwordController,
+          validator: _validatePassword,
+          obscureText: true,
+          decoration: InputDecoration(
+            hintText: 'Password',
+            prefixIcon: const Icon(Icons.lock_outline),
+            filled: true,
+            fillColor: Colors.grey.shade50,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 24),
+
+        PrimaryButton(
+          text: state is AuthLoading
+              ? 'Loading...'
+              : 'Create Account',
+          onTap: state is AuthLoading
+              ? null
+              : _register,
+        ),
+
+        const SizedBox(height: 24),
+
+        Row(
+          children: [
+            Expanded(
+              child: Divider(
+                color: Colors.grey.shade300,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Text('OR'),
+            ),
+            Expanded(
+              child: Divider(
+                color: Colors.grey.shade300,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 24),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Already have an account?',
+              style: AppTextStyles.authSubtitle,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
     );
+  },
+)))))));
   }
 }
